@@ -5,6 +5,8 @@ function UserList({ baseUrl }) {
   const [data, setData] = useState([])
   const [post, setPost] = useState({ name: "", email: "" })
   const [search, setSearch] = useState("");
+  const [[min, max], setMaxMin] = useState([0, 4]);
+  const [pageCounter, setPageCounter] = useState(1);
 
   const handleChange = (event) => {
     if (event.target.name == "search") {
@@ -20,8 +22,10 @@ function UserList({ baseUrl }) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post(baseUrl, post);
-    setPost({ name: "", email: "" });
+    if (post.name !== "" && post.email !== "") {
+      axios.post(baseUrl, post);
+      setPost({ name: "", email: "" });
+    }
   };
   const handleEdit = (event) => {
     const name = window.prompt("Nuevo nombre:")
@@ -31,7 +35,10 @@ function UserList({ baseUrl }) {
   const handleDelete = (event) => {
     axios.delete(`${baseUrl}/${event.target.value}`);
   };
-
+  const handlePagination = (event) => {
+    if (event.target.value == "<" && pageCounter > 1) {setMaxMin([min - 5, max - 5]); setPageCounter(pageCounter-1)}
+    if (event.target.value == ">" && pageCounter < parseFloat(data.length/5)) {setMaxMin([min + 5, max + 5]); setPageCounter(pageCounter+1)}
+  };
   useEffect(() => {
     axios.get(baseUrl)
       .then(res => setData(res.data))
@@ -47,15 +54,18 @@ function UserList({ baseUrl }) {
 
       <table>
         <tr>
-          <th>Nombre</th>
-          <th>Email</th>
+          <th><b>Nombre</b></th>
+          <th><b>Email</b></th>
         </tr>
-        {data.filter(post => search == "" || post.name.toLowerCase().startsWith(search.toLowerCase()) || post.email.toLowerCase().startsWith(search.toLowerCase())).map(post => <tr>
-          <th>{post.name}</th>
-          <th>{post.email}</th>
-          <button value={post.id} onClick={handleDelete}>Eliminar</button>
-          <button value={post.id} onClick={handleEdit}>Editar</button>
-        </tr>)}
+        {data.filter(post => search == "" || post.name.toLowerCase().startsWith(search.toLowerCase()) || post.email.toLowerCase().startsWith(search.toLowerCase()))
+          .filter((post, index) => min <= index && index <= max)
+          .map(post => <tr>
+            <th>{post.name}</th>
+            <th>{post.email}</th>
+            <button value={post.id} onClick={handleDelete}>Eliminar</button>
+            <button value={post.id} onClick={handleEdit}>Editar</button>
+          </tr>)}
+          <button value={"<"} onClick={handlePagination}>{"<"}</button><button value={">"} onClick={handlePagination}>{">"}</button><p>{pageCounter}</p>
       </table>
 
       <form onSubmit={handleSubmit}>
