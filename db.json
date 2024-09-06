@@ -1,0 +1,24 @@
+{
+  "posts": [
+    {
+      "id": "31e6",
+      "name": "Juan Mateo Frasinelli",
+      "email": "juanmateo.frasinelli@gmail.com"
+    },
+    {
+      "id": "3e5d",
+      "name": "Juan Mateo Frasinelli",
+      "email": "d46710280@alumnos.itr.edu.ar"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
