@@ -36,9 +36,10 @@ function UserList({ baseUrl }) {
     axios.delete(`${baseUrl}/${event.target.value}`);
   };
   const handlePagination = (event) => {
-    if (event.target.value == "<" && pageCounter > 1) {setMaxMin([min - 5, max - 5]); setPageCounter(pageCounter-1)}
-    if (event.target.value == ">" && pageCounter < parseFloat(data.length/5)) {setMaxMin([min + 5, max + 5]); setPageCounter(pageCounter+1)}
+    if (event.target.value == "<" && pageCounter > 1) { setMaxMin([min - 5, max - 5]); setPageCounter(pageCounter - 1) }
+    if (event.target.value == ">" && pageCounter < parseFloat(data.length / 5)) { setMaxMin([min + 5, max + 5]); setPageCounter(pageCounter + 1) }
   };
+  
   useEffect(() => {
     axios.get(baseUrl)
       .then(res => setData(res.data))
@@ -65,7 +66,7 @@ function UserList({ baseUrl }) {
             <button value={post.id} onClick={handleDelete}>Eliminar</button>
             <button value={post.id} onClick={handleEdit}>Editar</button>
           </tr>)}
-          <button value={"<"} onClick={handlePagination}>{"<"}</button><button value={">"} onClick={handlePagination}>{">"}</button><p>{pageCounter}</p>
+        <button value={"<"} onClick={handlePagination}>{"<"}</button><button value={">"} onClick={handlePagination}>{">"}</button><p>{pageCounter}</p>
       </table>
 
       <form onSubmit={handleSubmit}>
